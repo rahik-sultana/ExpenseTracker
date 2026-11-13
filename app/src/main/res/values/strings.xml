@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">ExpenseTracker</string>
+    <string name="app_title">Expense Tracker</string>
+    <string name="available_balance">Available Balance</string>
+    <string name="total_income">Total Income</string>
+    <string name="total_expense">Total Expense</string>
+    <string name="add_transaction_title">Add Transaction</string>
+    <string name="amount_label">Amount</string>
+    <string name="amount_hint">Enter Amount (৳)</string>
+    <string name="type_label">Transaction Type</string>
+    <string name="type_expense">Expense</string>
+    <string name="type_income">Income</string>
+    <string name="category_label">Category</string>
+    <string name="category_hint">Select Category</string>
+    <string name="date_label">Date</string>
+    <string name="description_label">Description (Optional)</string>
+    <string name="description_hint">Add a description (optional)</string>
+    <string name="save_transaction">Save Transaction</string>
+    <string name="recent_transactions">Recent Transactions</string>
+</resources>
