@@ -97,20 +97,42 @@ Never invent requirements or mark an unimplemented feature as completed.
 
 Do not overwhelm me with advanced technical explanations.
 
-## 10. Current Project Status
-The project has already been created in Android Studio.
+## 10. Current Project Status & Implemented Features
+The project is actively being developed with clean, modular Kotlin code and Android View-based architecture.
 
-Development is in its early stage.
+### Implemented Features:
+1. **App Identity & Launcher Icon:**
+   - Permanent App Icon: Official Concept 02 ("Geometric E-T Vault") adaptive icon in light lavender, purple, and soft light blue gradient.
+   - Animated Splash Screen: `SplashActivity` with centered logo, soft white halo glow, and fade-in animation, routing to Welcome or Dashboard.
 
-First inspect:
-- Project structure
-- Existing source code
-- Current screens
-- Implemented features
-- Dependencies
-- Gradle configuration
+2. **First-Time Welcome Onboarding:**
+   - `WelcomeActivity` shown only on the very first launch.
+   - Collects user's display name, saves to local `SharedPreferences` via `UserManager`.
+   - Never shown again unless reset from Profile.
 
-Do not assume any feature exists without checking.
+3. **Personalized Dashboard (`DashboardFragment`):**
+   - Header with greeting: "Welcome Back, [Name]!" and user initials avatar.
+   - **Status Bar Spacing:** Handled cleanly with `android:fitsSystemWindows="true"` and `ViewCompat.setOnApplyWindowInsetsListener` to prevent any status bar overlap across different screen sizes and notch designs.
+   - **Quick Profile Navigation:** Tapping the greeting row automatically switches to the Profile tab.
+   - Available Balance card with Income and Expense summary badges.
+   - Integrated "Add Transaction" section with 6 capsule-style rounded elements:
+     1. Amount Input (Capsule with ৳ currency prefix)
+     2. Segmented Type Selector (Expense vs. Income)
+     3. Category Dropdown (Food, Transport, Shopping, Bills, Education, Others)
+     4. Date Picker Container (triggers native `DatePickerDialog`)
+     5. Description (Multi-line rounded box)
+     6. Save Transaction Button (Capsule MaterialButton)
+
+4. **Bottom Navigation (`BottomNavigationView`):**
+   - 4 fixed tabs: Home (`DashboardFragment`), Alerts (`NotificationsFragment`), Profile (`ProfileFragment`), Settings (`SettingsFragment`).
+
+5. **Profile Management (`ProfileFragment`):**
+   - Displays user's name and initials.
+   - Allows editing and saving the user's display name.
+   - **Persistent Profile Avatar:** Gallery photos are copied directly into the app's private internal storage (`context.filesDir/profile_avatar.jpg`) and referenced via `SharedPreferences`. This prevents Android from revoking temporary content URI permissions when the app closes and reopens.
+   - Synchronized with both the Profile screen avatar and Dashboard header avatar (`ivHeaderAvatar`).
+   - Clean overwriting on new photo selection, and file deletion on photo removal or profile reset.
+   - "Reset Profile" button for testing onboarding.
 
 ## 11. Golden Rule
 My confirmed requirements are the source of truth.

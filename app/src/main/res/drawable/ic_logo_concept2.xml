@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="100dp"
+    android:height="100dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+
+    <!-- Gradient Background Squircle Shape -->
+    <path android:pathData="M26,0 L74,0 C88.36,0 100,11.64 100,26 L100,74 C100,88.36 88.36,100 74,100 L26,100 C11.64,100 0,88.36 0,74 L0,26 C0,11.64 11.64,0 26,0 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="0"
+                android:startY="0"
+                android:endX="100"
+                android:endY="100"
+                android:type="linear">
+                <item android:color="#93C5FD" android:offset="0.0" />
+                <item android:color="#818CF8" android:offset="0.5" />
+                <item android:color="#C084FC" android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Top Horizontal Bar (E & T Top) -->
+    <path
+        android:pathData="M35,30 L65,30"
+        android:strokeWidth="6.5"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round" />
+
+    <!-- Center Vertical Stem (T Stem & E Spine) -->
+    <path
+        android:pathData="M50,30 L50,70"
+        android:strokeWidth="6.5"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round" />
+
+    <!-- Middle Horizontal Bar (E Mid) -->
+    <path
+        android:pathData="M35,50 L56,50"
+        android:strokeWidth="6"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round" />
+
+    <!-- Bottom Horizontal Bar (E Bottom) -->
+    <path
+        android:pathData="M35,70 L65,70"
+        android:strokeWidth="6.5"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round" />
+
+    <!-- Central Accent Node / Gem -->
+    <path
+        android:pathData="M50,45.5 A4.5,4.5 0 1,1 49.99,45.5 Z"
+        android:fillColor="#818CF8" />
+
+</vector>

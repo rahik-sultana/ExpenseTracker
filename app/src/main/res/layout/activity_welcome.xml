@@ -21,23 +21,13 @@
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
-            <!-- Logo Card -->
-            <LinearLayout
+            <!-- Official Concept 02 Logo -->
+            <ImageView
                 android:layout_width="76dp"
                 android:layout_height="76dp"
                 android:layout_marginTop="16dp"
-                android:background="@drawable/bg_balance_card"
-                android:elevation="3dp"
-                android:gravity="center">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="৳"
-                    android:textColor="@color/white"
-                    android:textSize="36sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
+                android:contentDescription="Expense Tracker Logo"
+                android:src="@drawable/ic_logo_concept2" />
 
             <!-- Welcome Header -->
             <TextView

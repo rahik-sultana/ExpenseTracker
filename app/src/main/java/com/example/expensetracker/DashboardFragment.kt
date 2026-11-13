@@ -1,11 +1,13 @@
 package com.example.expensetracker
 
 import android.app.DatePickerDialog
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
@@ -33,24 +35,13 @@ class DashboardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 1. Personalized Greeting
-        val tvGreeting = view.findViewById<TextView>(R.id.tvDashboardGreeting)
-        val tvAvatar = view.findViewById<TextView>(R.id.tvHeaderAvatar)
-        val fullName = UserManager.getUserName(requireContext())
-        val firstName = fullName.split(" ").firstOrNull() ?: fullName
+        // 1. Personalized Greeting & Quick Profile Navigation
+        val layoutHeaderProfile = view.findViewById<LinearLayout>(R.id.layoutHeaderProfile)
+        updateHeaderProfile()
 
-        if (firstName.isNotEmpty()) {
-            tvGreeting.text = "Welcome Back, $firstName!"
-            // Set initials in header avatar
-            val initials = fullName.split(" ")
-                .filter { it.isNotEmpty() }
-                .take(2)
-                .map { it.first().uppercase() }
-                .joinToString("")
-            tvAvatar.text = if (initials.isNotEmpty()) initials else "ET"
-        } else {
-            tvGreeting.text = "Welcome Back!"
-            tvAvatar.text = "ET"
+        // Tapping the greeting header automatically switches to the Profile tab
+        layoutHeaderProfile.setOnClickListener {
+            (activity as? MainActivity)?.navigateToProfile()
         }
 
         // 2. Form Views
@@ -130,6 +121,56 @@ class DashboardFragment : Fragment() {
             etAmount.text.clear()
             etDescription.text.clear()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Keep personalized greeting and avatar in sync with any profile edits
+        updateHeaderProfile()
+    }
+
+    private fun updateHeaderProfile() {
+        val currentView = view ?: return
+        val tvGreeting = currentView.findViewById<TextView>(R.id.tvDashboardGreeting)
+        val tvAvatar = currentView.findViewById<TextView>(R.id.tvHeaderAvatar)
+        val ivAvatar = currentView.findViewById<ImageView>(R.id.ivHeaderAvatar)
+
+        val fullName = UserManager.getUserName(requireContext())
+        val firstName = fullName.split(" ").firstOrNull() ?: fullName
+
+        if (firstName.isNotEmpty()) {
+            tvGreeting.text = "Welcome Back, $firstName!"
+            val initials = fullName.split(" ")
+                .filter { it.isNotEmpty() }
+                .take(2)
+                .map { it.first().uppercase() }
+                .joinToString("")
+            tvAvatar.text = if (initials.isNotEmpty()) initials else "ET"
+        } else {
+            tvGreeting.text = "Welcome Back!"
+            tvAvatar.text = "ET"
+        }
+
+        // Check if persistent profile photo exists in internal storage
+        val avatarFile = UserManager.getProfileImageFile(requireContext())
+        if (avatarFile != null) {
+            try {
+                ivAvatar.setImageDrawable(null)
+                val bitmap = BitmapFactory.decodeFile(avatarFile.absolutePath)
+                if (bitmap != null) {
+                    ivAvatar.setImageBitmap(bitmap)
+                    ivAvatar.visibility = View.VISIBLE
+                    tvAvatar.visibility = View.GONE
+                    return
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        ivAvatar.setImageDrawable(null)
+        ivAvatar.visibility = View.GONE
+        tvAvatar.visibility = View.VISIBLE
     }
 
     private fun updateDateLabel(textView: TextView) {

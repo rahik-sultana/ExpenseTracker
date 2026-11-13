@@ -1,6 +1,7 @@
 package com.example.expensetracker
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -23,15 +24,19 @@ class ProfileFragment : Fragment() {
     private lateinit var etProfileName: EditText
     private lateinit var btnRemovePhoto: TextView
 
-    // Modern photo picker using ActivityResultContracts.GetContent()
-    // Completely optional; works across all Android versions without extra runtime permissions.
+    // Photo picker using ActivityResultContracts.GetContent()
+    // When an image is picked, it is copied into app's private internal storage for permanent persistence
     private val pickImageLauncher = registerForActivityResult(
         ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         if (uri != null) {
-            UserManager.saveProfileImageUri(requireContext(), uri.toString())
-            updateProfileAvatar(uri.toString())
-            Toast.makeText(requireContext(), "Profile picture updated", Toast.LENGTH_SHORT).show()
+            val savedPath = UserManager.saveProfileImageFromUri(requireContext(), uri)
+            if (savedPath != null) {
+                updateProfileAvatar()
+                Toast.makeText(requireContext(), "Profile picture updated", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(requireContext(), "Failed to save profile picture", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -60,19 +65,18 @@ class ProfileFragment : Fragment() {
         tvProfileDisplayName.text = if (currentName.isNotEmpty()) currentName else "User"
         etProfileName.setText(currentName)
 
-        val savedImageUri = UserManager.getProfileImageUri(requireContext())
-        updateProfileAvatar(savedImageUri)
+        // Load avatar from internal storage
+        updateProfileAvatar()
 
         // 2. Photo Picker Trigger
         fabChangePhoto.setOnClickListener {
-            // Allows picking an image from device gallery
             pickImageLauncher.launch("image/*")
         }
 
         // 3. Remove Photo Option
         btnRemovePhoto.setOnClickListener {
-            UserManager.saveProfileImageUri(requireContext(), null)
-            updateProfileAvatar(null)
+            UserManager.deleteProfileImage(requireContext())
+            updateProfileAvatar()
             Toast.makeText(requireContext(), "Photo removed", Toast.LENGTH_SHORT).show()
         }
 
@@ -103,21 +107,35 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    private fun updateProfileAvatar(uriString: String?) {
+    override fun onResume() {
+        super.onResume()
+        // Ensure UI stays up to date
+        updateProfileAvatar()
+    }
+
+    private fun updateProfileAvatar() {
         val name = UserManager.getUserName(requireContext())
-        if (!uriString.isNullOrEmpty()) {
+        val avatarFile = UserManager.getProfileImageFile(requireContext())
+
+        if (avatarFile != null) {
             try {
-                ivProfileImage.setImageURI(Uri.parse(uriString))
-                ivProfileImage.visibility = View.VISIBLE
-                tvProfileInitials.visibility = View.GONE
-                btnRemovePhoto.visibility = View.VISIBLE
-                return
+                // Clear any previous bitmap reference to avoid stale caching
+                ivProfileImage.setImageDrawable(null)
+                val bitmap = BitmapFactory.decodeFile(avatarFile.absolutePath)
+                if (bitmap != null) {
+                    ivProfileImage.setImageBitmap(bitmap)
+                    ivProfileImage.visibility = View.VISIBLE
+                    tvProfileInitials.visibility = View.GONE
+                    btnRemovePhoto.visibility = View.VISIBLE
+                    return
+                }
             } catch (e: Exception) {
-                // If URI is invalid or inaccessible, fallback to initials
+                e.printStackTrace()
             }
         }
 
-        // Default: Show initials
+        // Default fallback: Show initials
+        ivProfileImage.setImageDrawable(null)
         ivProfileImage.visibility = View.GONE
         tvProfileInitials.visibility = View.VISIBLE
         btnRemovePhoto.visibility = View.GONE

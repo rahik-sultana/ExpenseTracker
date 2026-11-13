@@ -11,15 +11,20 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingHorizontal="20dp"
-        android:paddingTop="28dp"
+        android:paddingTop="16dp"
         android:paddingBottom="24dp">
 
-        <!-- Header Section with Personalized Greeting -->
+        <!-- Header Section with Personalized Greeting (Clickable to open Profile) -->
         <LinearLayout
+            android:id="@+id/layoutHeaderProfile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingVertical="4dp">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -48,17 +53,31 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <!-- User Avatar Circle -->
-            <TextView
-                android:id="@+id/tvHeaderAvatar"
+            <!-- User Avatar Circle (Displays photo if set, or initials fallback) -->
+            <FrameLayout
                 android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@drawable/bg_capsule_input"
-                android:gravity="center"
-                android:text="ET"
-                android:textColor="@color/emerald_dark"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:layout_height="40dp">
+
+                <ImageView
+                    android:id="@+id/ivHeaderAvatar"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/bg_capsule_input"
+                    android:contentDescription="Profile Avatar"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tvHeaderAvatar"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/bg_capsule_input"
+                    android:gravity="center"
+                    android:text="ET"
+                    android:textColor="@color/emerald_dark"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </FrameLayout>
 
         </LinearLayout>
 
